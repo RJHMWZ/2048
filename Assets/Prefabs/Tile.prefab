@@ -92,3 +92,23 @@ MonoBehaviour:
   tileSprites:
   - Value: 2
     Sprite: {fileID: 450749433, guid: 64b8b50bcc4925841a1161083ea4b763, type: 3}
+  - Value: 4
+    Sprite: {fileID: -167373707, guid: 64b8b50bcc4925841a1161083ea4b763, type: 3}
+  - Value: 8
+    Sprite: {fileID: -1502907161, guid: 64b8b50bcc4925841a1161083ea4b763, type: 3}
+  - Value: 16
+    Sprite: {fileID: -132087038, guid: 64b8b50bcc4925841a1161083ea4b763, type: 3}
+  - Value: 32
+    Sprite: {fileID: 849001014, guid: 64b8b50bcc4925841a1161083ea4b763, type: 3}
+  - Value: 64
+    Sprite: {fileID: 857475618, guid: 64b8b50bcc4925841a1161083ea4b763, type: 3}
+  - Value: 128
+    Sprite: {fileID: 1901097297, guid: 64b8b50bcc4925841a1161083ea4b763, type: 3}
+  - Value: 256
+    Sprite: {fileID: -1631993635, guid: 64b8b50bcc4925841a1161083ea4b763, type: 3}
+  - Value: 512
+    Sprite: {fileID: 1559875390, guid: 64b8b50bcc4925841a1161083ea4b763, type: 3}
+  - Value: 1024
+    Sprite: {fileID: 1198274960, guid: 64b8b50bcc4925841a1161083ea4b763, type: 3}
+  - Value: 2048
+    Sprite: {fileID: -1095515648, guid: 64b8b50bcc4925841a1161083ea4b763, type: 3}
