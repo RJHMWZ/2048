@@ -103,6 +103,8 @@ public class Game2048Manager : MonoBehaviour
 
         boardView?.Refresh();
 
+        GameAudioManager.Instance.PlaySpawn();
+
         gameHUD?.SetScore(
             score,
             bestScore
@@ -146,13 +148,27 @@ public class Game2048Manager : MonoBehaviour
             return;
         }
 
+        if (result.Score > 0)
+        {
+            GameAudioManager.Instance.PlayMerge();
+        }
+        else
+        {
+            GameAudioManager.Instance.PlayMove();
+        }
+
         //增加本次合并获得的分数
         score += result.Score;
 
         UpdateBestScore();
 
         //有效移动后生成一个新数字
-        board.GenerateRandomTile();
+        bool tileGenerated = board.GenerateRandomTile();
+
+        if (tileGenerated)
+        {
+            GameAudioManager.Instance.PlaySpawn();
+        }
 
         //检查胜利或失败状态
         CheckGameState();
@@ -185,6 +201,8 @@ public class Game2048Manager : MonoBehaviour
 
             Debug.Log("Victory！已经合成2048！");
 
+            GameAudioManager.Instance.PlayVictory();
+
             gameResultUI?.ShowVictory();
         }
 
@@ -194,6 +212,8 @@ public class Game2048Manager : MonoBehaviour
             isGameOver = true;
 
             Debug.Log("Game Over！");
+
+            GameAudioManager.Instance.PlayGameOver();
 
             gameResultUI?.ShowGameOver(score);
         }

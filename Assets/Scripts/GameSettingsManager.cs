@@ -18,6 +18,9 @@ public class GameSettingsManager : MonoBehaviour
         soundEnabled =
             GameSaveManager
                 .GetSoundEnabled();
+
+        GameAudioManager.Instance
+            .SetSoundEnabled(soundEnabled);
     }
 
     /// <summary>
@@ -28,10 +31,8 @@ public class GameSettingsManager : MonoBehaviour
     {
         soundEnabled = enabled;
 
-        GameSaveManager
-            .SaveSoundEnabled(
-                soundEnabled
-            );
+        GameAudioManager.Instance
+            .SetSoundEnabled(soundEnabled);
     }
 
     /// <summary>
