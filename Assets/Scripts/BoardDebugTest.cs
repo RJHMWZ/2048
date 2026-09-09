@@ -8,21 +8,66 @@ public class BoardDebugTest : MonoBehaviour
 {
     private BoardModel board;
 
-    private void Start() 
-    {
-        board = new BoardModel();
+    // private void Start() 
+    // {
+    //     board = new BoardModel();
 
-        //清空棋盘
-        board.Clear();
+    //     //清空棋盘
+    //     board.Clear();
 
-        //开局生成两个数字
-        board.GenerateRandomTile();
-        board.GenerateRandomTile();
+    //     //开局生成两个数字
+    //     board.GenerateRandomTile();
+    //     board.GenerateRandomTile();
 
-        PrintBoard();
-    }
+    //     PrintBoard();
+    // }
 
     #region 测试代码
+    private void Start()
+    {
+        TestMerge(new int[] { 2, 0, 2, 2 });
+        TestMerge(new int[] { 2, 2, 2, 2 });
+        TestMerge(new int[] { 2, 2, 4, 4 });
+        TestMerge(new int[] { 4, 4, 4, 0 });
+        TestMerge(new int[] { 2, 4, 8, 16 });
+        TestMerge(new int[] { 0, 0, 0, 0 });
+    }
+
+    /// <summary>
+    /// 测试单行合并
+    /// </summary>
+    private void TestMerge(int[] line)
+    {
+        int[] result = LineMergeUtility.MergeLeft(line);
+
+        Debug.Log(
+            $"原始：{ArrayToString(line)} " +
+            $"→ 合并：{ArrayToString(result)}"
+        );
+    }
+
+    /// <summary>
+    /// 将数组转换成字符串
+    /// </summary>
+    private string ArrayToString(int[] array)
+    {
+        StringBuilder builder = new StringBuilder();
+
+        builder.Append("[");
+
+        for (int i = 0; i < array.Length; i++)
+        {
+            builder.Append(array[i]);
+
+            if (i < array.Length - 1)
+            {
+                builder.Append(", ");
+            }
+        }
+
+        builder.Append("]");
+        return builder.ToString();
+    }
   // private void Start()
     // {
     //     board = new BoardModel();
