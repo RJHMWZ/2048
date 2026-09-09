@@ -1,31 +1,31 @@
 using System.Collections.Generic;
 
 /// <summary>
-/// 棋盘移动结果
+/// 单行移动计算结果
 /// </summary>
-public struct BoardMoveResult
+public struct LineMoveResult
 {
     /// <summary>
-    /// 棋盘是否发生变化
+    /// 最终一行的数据
     /// </summary>
-    public bool Moved;
+    public int[] Line;
 
     /// <summary>
-    /// 本次移动获得的分数
+    /// 本行获得的分数
     /// </summary>
     public int Score;
 
     /// <summary>
-    /// 本次所有方块的移动信息
+    /// 本行所有Tile移动信息
     /// </summary>
     public List<TileMoveInfo> MoveInfos;
 
-    public BoardMoveResult(
-        bool moved,
+    public LineMoveResult(
+        int[] line,
         int score,
         List<TileMoveInfo> moveInfos)
     {
-        Moved = moved;
+        Line = line;
 
         Score = score;
 

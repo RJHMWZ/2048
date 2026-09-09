@@ -71,7 +71,8 @@ public class BoardModel
     /// <summary>
     /// 根据指定方向移动棋盘
     /// </summary>
-    public BoardMoveResult Move(MoveDirection direction)
+    public BoardMoveResult Move(
+    MoveDirection direction)
     {
         switch (direction)
         {
@@ -88,7 +89,11 @@ public class BoardModel
                 return MoveDown();
         }
 
-        return new BoardMoveResult(false, 0);
+        return new BoardMoveResult(
+            false,
+            0,
+            new List<TileMoveInfo>()
+        );
     }
 
     /// <summary>
@@ -99,38 +104,68 @@ public class BoardModel
         bool moved = false;
         int score = 0;
 
+        List<TileMoveInfo> moveInfos =
+            new List<TileMoveInfo>();
+
         for (int row = 0; row < Size; row++)
         {
-            int[] line = new int[Size];
+            List<LineTileData> tiles =
+                new List<LineTileData>();
 
-            //读取当前行
-            for (int column = 0; column < Size; column++)
+            //从左往右读取非0数字
+            for (int column = 0;
+                column < Size;
+                column++)
             {
-                line[column] = cells[row, column];
+                int value =
+                    cells[row, column];
+
+                if (value == 0)
+                    continue;
+
+                tiles.Add(
+                    new LineTileData(
+                        value,
+                        row,
+                        column
+                    )
+                );
             }
 
-            //计算当前行的合并结果
-            LineMergeResult mergeResult =
-                LineMergeUtility.MergeLeft(line);
+            LineMoveResult result =
+                LineMergeUtility.MergeLeftWithMoveInfo(
+                    tiles,
+                    row,
+                    true,
+                    false
+                );
 
-            int[] result = mergeResult.Line;
+            score += result.Score;
 
-            //累加这一行获得的分数
-            score += mergeResult.Score;
+            moveInfos.AddRange(
+                result.MoveInfos
+            );
 
-            //比较并写回
-            for (int column = 0; column < Size; column++)
+            for (int column = 0;
+                column < Size;
+                column++)
             {
-                if (cells[row, column] != result[column])
+                if (cells[row, column] !=
+                    result.Line[column])
                 {
                     moved = true;
                 }
 
-                cells[row, column] = result[column];
+                cells[row, column] =
+                    result.Line[column];
             }
         }
 
-        return new BoardMoveResult(moved, score);
+        return new BoardMoveResult(
+            moved,
+            score,
+            moveInfos
+        );
     }
 
     /// <summary>
@@ -141,40 +176,70 @@ public class BoardModel
         bool moved = false;
         int score = 0;
 
-        for (int row = 0; row < Size; row++)
-        {
-            int[] line = new int[Size];
+        List<TileMoveInfo> moveInfos =
+            new List<TileMoveInfo>();
 
-            //反向读取当前行
-            for (int column = 0; column < Size; column++)
+        for (int row = 0;
+            row < Size;
+            row++)
+        {
+            List<LineTileData> tiles =
+                new List<LineTileData>();
+
+            //从右往左读取
+            for (int column = Size - 1;
+                column >= 0;
+                column--)
             {
-                line[column] =
-                    cells[row, Size - 1 - column];
+                int value =
+                    cells[row, column];
+
+                if (value == 0)
+                    continue;
+
+                tiles.Add(
+                    new LineTileData(
+                        value,
+                        row,
+                        column
+                    )
+                );
             }
 
-            LineMergeResult mergeResult =
-                LineMergeUtility.MergeLeft(line);
+            LineMoveResult result =
+                LineMergeUtility.MergeLeftWithMoveInfo(
+                    tiles,
+                    row,
+                    true,
+                    true
+                );
 
-            int[] result = mergeResult.Line;
+            score += result.Score;
 
-            score += mergeResult.Score;
+            moveInfos.AddRange(
+                result.MoveInfos
+            );
 
-            //反向写回
-            for (int column = 0; column < Size; column++)
+            for (int column = 0;
+                column < Size;
+                column++)
             {
-                int targetColumn =
-                    Size - 1 - column;
-
-                if (cells[row, targetColumn] != result[column])
+                if (cells[row, column] !=
+                    result.Line[Size - 1 - column])
                 {
                     moved = true;
                 }
 
-                cells[row, targetColumn] = result[column];
+                cells[row, column] =
+                    result.Line[Size - 1 - column];
             }
         }
 
-        return new BoardMoveResult(moved, score);
+        return new BoardMoveResult(
+            moved,
+            score,
+            moveInfos
+        );
     }
 
     /// <summary>
@@ -185,36 +250,70 @@ public class BoardModel
         bool moved = false;
         int score = 0;
 
-        for (int column = 0; column < Size; column++)
+        List<TileMoveInfo> moveInfos =
+            new List<TileMoveInfo>();
+
+        for (int column = 0;
+            column < Size;
+            column++)
         {
-            int[] line = new int[Size];
+            List<LineTileData> tiles =
+                new List<LineTileData>();
 
             //从上往下读取
-            for (int row = 0; row < Size; row++)
+            for (int row = 0;
+                row < Size;
+                row++)
             {
-                line[row] = cells[row, column];
+                int value =
+                    cells[row, column];
+
+                if (value == 0)
+                    continue;
+
+                tiles.Add(
+                    new LineTileData(
+                        value,
+                        row,
+                        column
+                    )
+                );
             }
 
-            LineMergeResult mergeResult =
-                LineMergeUtility.MergeLeft(line);
+            LineMoveResult result =
+                LineMergeUtility.MergeLeftWithMoveInfo(
+                    tiles,
+                    column,
+                    false,
+                    false
+                );
 
-            int[] result = mergeResult.Line;
+            score += result.Score;
 
-            score += mergeResult.Score;
+            moveInfos.AddRange(
+                result.MoveInfos
+            );
 
-            //从上往下写回
-            for (int row = 0; row < Size; row++)
+            for (int row = 0;
+                row < Size;
+                row++)
             {
-                if (cells[row, column] != result[row])
+                if (cells[row, column] !=
+                    result.Line[row])
                 {
                     moved = true;
                 }
 
-                cells[row, column] = result[row];
+                cells[row, column] =
+                    result.Line[row];
             }
         }
 
-        return new BoardMoveResult(moved, score);
+        return new BoardMoveResult(
+            moved,
+            score,
+            moveInfos
+        );
     }
 
     /// <summary>
@@ -225,40 +324,70 @@ public class BoardModel
         bool moved = false;
         int score = 0;
 
-        for (int column = 0; column < Size; column++)
+        List<TileMoveInfo> moveInfos =
+            new List<TileMoveInfo>();
+
+        for (int column = 0;
+            column < Size;
+            column++)
         {
-            int[] line = new int[Size];
+            List<LineTileData> tiles =
+                new List<LineTileData>();
 
             //从下往上读取
-            for (int row = 0; row < Size; row++)
+            for (int row = Size - 1;
+                row >= 0;
+                row--)
             {
-                line[row] =
-                    cells[Size - 1 - row, column];
+                int value =
+                    cells[row, column];
+
+                if (value == 0)
+                    continue;
+
+                tiles.Add(
+                    new LineTileData(
+                        value,
+                        row,
+                        column
+                    )
+                );
             }
 
-            LineMergeResult mergeResult =
-                LineMergeUtility.MergeLeft(line);
+            LineMoveResult result =
+                LineMergeUtility.MergeLeftWithMoveInfo(
+                    tiles,
+                    column,
+                    false,
+                    true
+                );
 
-            int[] result = mergeResult.Line;
+            score += result.Score;
 
-            score += mergeResult.Score;
+            moveInfos.AddRange(
+                result.MoveInfos
+            );
 
-            //从下往上写回
-            for (int row = 0; row < Size; row++)
+            for (int row = 0;
+                row < Size;
+                row++)
             {
-                int targetRow =
-                    Size - 1 - row;
-
-                if (cells[targetRow, column] != result[row])
+                if (cells[row, column] !=
+                    result.Line[Size - 1 - row])
                 {
                     moved = true;
                 }
 
-                cells[targetRow, column] = result[row];
+                cells[row, column] =
+                    result.Line[Size - 1 - row];
             }
         }
 
-        return new BoardMoveResult(moved, score);
+        return new BoardMoveResult(
+            moved,
+            score,
+            moveInfos
+        );
     }
 
     /// <summary>

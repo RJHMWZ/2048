@@ -3,16 +3,11 @@ using System.Collections.Generic;
 /// <summary>
 /// 2048单行移动与合并工具
 /// </summary>
-/// <summary>
-/// 2048单行移动与合并工具
-/// </summary>
 public static class LineMergeUtility
 {
     /// <summary>
-    /// 将一行数字向左压缩并合并
+    /// 普通单行左合并
     /// </summary>
-    /// <param name="line">原始行数据</param>
-    /// <returns>合并结果</returns>
     public static LineMergeResult MergeLeft(int[] line)
     {
         if (line == null)
@@ -22,7 +17,6 @@ public static class LineMergeUtility
 
         List<int> numbers = new List<int>();
 
-        //第一步：移除所有0
         for (int i = 0; i < line.Length; i++)
         {
             if (line[i] != 0)
@@ -33,23 +27,18 @@ public static class LineMergeUtility
 
         int score = 0;
 
-        //第二步：合并相邻相同数字
         for (int i = 0; i < numbers.Count - 1; i++)
         {
             if (numbers[i] == numbers[i + 1])
             {
-                //合并
                 numbers[i] *= 2;
 
-                //本次合并后的数字就是获得的分数
                 score += numbers[i];
 
-                //删除被合并掉的数字
                 numbers.RemoveAt(i + 1);
             }
         }
 
-        //第三步：补0
         int[] result = new int[line.Length];
 
         for (int i = 0; i < numbers.Count; i++)
@@ -58,5 +47,149 @@ public static class LineMergeUtility
         }
 
         return new LineMergeResult(result, score);
+    }
+
+    /// <summary>
+    /// 计算向左移动，并记录每个Tile的移动信息
+    /// </summary>
+    public static LineMoveResult MergeLeftWithMoveInfo(
+        List<LineTileData> tiles,
+        int fixedIndex,
+        bool horizontal,
+        bool reversed)
+    {
+        int[] result = new int[BoardModel.Size];
+
+        List<TileMoveInfo> moveInfos =
+            new List<TileMoveInfo>();
+
+        int score = 0;
+
+        int targetIndex = 0;
+
+        int i = 0;
+
+        while (i < tiles.Count)
+        {
+            LineTileData current = tiles[i];
+
+            bool canMerge =
+                i + 1 < tiles.Count &&
+                tiles[i + 1].Value == current.Value;
+
+            if (canMerge)
+            {
+                LineTileData next =
+                    tiles[i + 1];
+
+                int mergedValue =
+                    current.Value * 2;
+
+                result[targetIndex] =
+                    mergedValue;
+
+                score += mergedValue;
+
+                GetTargetPosition(
+                    fixedIndex,
+                    targetIndex,
+                    horizontal,
+                    reversed,
+                    out int targetRow,
+                    out int targetColumn
+                );
+
+                moveInfos.Add(
+                    new TileMoveInfo(
+                        current.Row,
+                        current.Column,
+                        targetRow,
+                        targetColumn,
+                        current.Value,
+                        true
+                    )
+                );
+
+                moveInfos.Add(
+                    new TileMoveInfo(
+                        next.Row,
+                        next.Column,
+                        targetRow,
+                        targetColumn,
+                        next.Value,
+                        true
+                    )
+                );
+
+                i += 2;
+            }
+            else
+            {
+                result[targetIndex] =
+                    current.Value;
+
+                GetTargetPosition(
+                    fixedIndex,
+                    targetIndex,
+                    horizontal,
+                    reversed,
+                    out int targetRow,
+                    out int targetColumn
+                );
+
+                //只有位置发生变化才记录移动
+                if (current.Row != targetRow ||
+                    current.Column != targetColumn)
+                {
+                    moveInfos.Add(
+                        new TileMoveInfo(
+                            current.Row,
+                            current.Column,
+                            targetRow,
+                            targetColumn,
+                            current.Value,
+                            false
+                        )
+                    );
+                }
+
+                i++;
+            }
+
+            targetIndex++;
+        }
+
+        return new LineMoveResult(
+            result,
+            score,
+            moveInfos
+        );
+    }
+
+    /// <summary>
+    /// 根据方向计算最终棋盘坐标
+    /// </summary>
+    private static void GetTargetPosition(
+        int fixedIndex,
+        int targetIndex,
+        bool horizontal,
+        bool reversed,
+        out int row,
+        out int column)
+    {
+        int index = reversed
+            ? BoardModel.Size - 1 - targetIndex
+            : targetIndex;
+
+        if (horizontal)
+        {
+            row = fixedIndex;
+            column = index;
+        }
+        else
+        {
+            row = index;
+            column = fixedIndex;
+        }
     }
 }

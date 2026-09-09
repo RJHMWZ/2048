@@ -5601,6 +5601,26 @@ MonoBehaviour:
   - {fileID: 1017017904}
   - {fileID: 586666631}
   - {fileID: 909534955}
+  cellRects:
+  - {fileID: 509932800}
+  - {fileID: 1890710921}
+  - {fileID: 1792376207}
+  - {fileID: 961250282}
+  - {fileID: 106765526}
+  - {fileID: 610784056}
+  - {fileID: 6972667}
+  - {fileID: 1121955538}
+  - {fileID: 256224174}
+  - {fileID: 2078015055}
+  - {fileID: 244948422}
+  - {fileID: 579726152}
+  - {fileID: 191881401}
+  - {fileID: 677100942}
+  - {fileID: 1210876570}
+  - {fileID: 50678212}
+  animationLayer: {fileID: 0}
+  moveTilePrefab: {fileID: 0}
+  moveDuration: 0.11
 --- !u!1 &1743628698
 GameObject:
   m_ObjectHideFlags: 0
