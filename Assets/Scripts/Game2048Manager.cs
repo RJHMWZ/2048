@@ -63,8 +63,20 @@ public class Game2048Manager : MonoBehaviour
     [SerializeField]
     private GameResultUI gameResultUI;
 
+    /// <summary>
+    /// 历史最高分
+    /// </summary>
+    private int bestScore;
+
+    /// <summary>
+    /// 历史最高分
+    /// </summary>
+    public int BestScore => bestScore;
+
     private void Start()
     {
+        //读取本地最高分
+        bestScore = GameSaveManager.GetBestScore();
         StartGame();
     }
 
@@ -74,22 +86,27 @@ public class Game2048Manager : MonoBehaviour
     public void StartGame()
     {
         board = new BoardModel();
-
         board.Clear();
 
+        //只清空当前分数
         score = 0;
 
         isGameOver = false;
         hasWon = false;
 
-        board.GenerateRandomTile();
-        board.GenerateRandomTile();
-
         gameResultUI?.ResetUI();
+
+        boardView?.ResetView();
+
+        board.GenerateRandomTile();
+        board.GenerateRandomTile();
 
         boardView?.Refresh();
 
-        gameHUD?.SetScore(score);
+        gameHUD?.SetScore(
+            score,
+            bestScore
+        );
 
         PrintBoard();
     }
@@ -132,6 +149,8 @@ public class Game2048Manager : MonoBehaviour
         //增加本次合并获得的分数
         score += result.Score;
 
+        UpdateBestScore();
+
         //有效移动后生成一个新数字
         board.GenerateRandomTile();
 
@@ -142,7 +161,10 @@ public class Game2048Manager : MonoBehaviour
         boardView?.Refresh();
 
         //刷新分数
-        gameHUD?.SetScore(score);
+        gameHUD?.SetScore(
+            score,
+            bestScore
+        );
 
         //输出测试数据
         PrintBoard();
@@ -235,5 +257,20 @@ public class Game2048Manager : MonoBehaviour
     public void BackToMenu()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("MenuScene");
+    }
+
+    /// <summary>
+    /// 检查并更新历史最高分
+    /// </summary>
+    private void UpdateBestScore()
+    {
+        if (score <= bestScore)
+            return;
+
+        bestScore = score;
+
+        GameSaveManager.SaveBestScore(
+            bestScore
+        );
     }
 }
