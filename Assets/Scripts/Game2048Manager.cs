@@ -256,11 +256,24 @@ public class Game2048Manager : MonoBehaviour
     }
 
     /// <summary>
+    /// 显示暂停界面
+    /// </summary>
+    public void ShowPause()
+    {
+        gameResultUI?.ShowPause();
+    }
+
+    /// <summary>
     /// 达到2048后继续游戏
     /// </summary>
     public void ContinueGame()
     {
         gameResultUI?.HideVictory();
+    }
+
+    public void ClosePausePanel()
+    {
+        gameResultUI?.HidePause();
     }
 
     /// <summary>

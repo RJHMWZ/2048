@@ -13,6 +13,9 @@ public class GameResultUI : MonoBehaviour
     [SerializeField]
     private GameObject gameOverPanel;
 
+    [SerializeField]
+    private GameObject pausePanel;
+
     [Header("失败界面")]
     [SerializeField]
     private TMP_Text gameOverScoreText;
@@ -31,6 +34,33 @@ public class GameResultUI : MonoBehaviour
         {
             gameOverPanel.SetActive(false);
         }
+
+        if (pausePanel != null)
+        {
+            pausePanel.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// 显示暂停界面
+    /// </summary>
+    public void ShowPause()
+    {
+        if (pausePanel == null)
+            return;
+
+        pausePanel.SetActive(true);
+    }
+
+    /// <summary>
+    /// 关闭暂停界面
+    /// </summary>
+    public void HidePause()
+    {
+        if (pausePanel == null)
+            return;
+
+        pausePanel.SetActive(false);
     }
 
     /// <summary>
