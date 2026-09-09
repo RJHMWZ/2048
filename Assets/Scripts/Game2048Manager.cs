@@ -7,14 +7,24 @@ using UnityEngine;
 public class Game2048Manager : MonoBehaviour
 {
     /// <summary>
-    /// 当前棋盘数据
+    /// 当前棋盘
     /// </summary>
     private BoardModel board;
+
+    /// <summary>
+    /// 当前分数
+    /// </summary>
+    private int score;
 
     /// <summary>
     /// 当前棋盘
     /// </summary>
     public BoardModel Board => board;
+
+    /// <summary>
+    /// 当前分数
+    /// </summary>
+    public int Score => score;
 
     private void Start()
     {
@@ -26,56 +36,62 @@ public class Game2048Manager : MonoBehaviour
     /// </summary>
     public void StartGame()
     {
-        //创建棋盘
         board = new BoardModel();
 
-        //清空棋盘
         board.Clear();
 
-        //2048开局生成两个数字
+        //重置分数
+        score = 0;
+
+        //开局生成两个数字
         board.GenerateRandomTile();
         board.GenerateRandomTile();
 
-        //当前阶段暂时使用Console查看棋盘
         PrintBoard();
     }
 
     /// <summary>
-    /// 根据玩家输入移动棋盘
+    /// 根据玩家输入移动
     /// </summary>
-    /// <param name="direction">移动方向</param>
     public void Move(MoveDirection direction)
     {
         if (board == null)
             return;
 
-        //执行移动
-        bool moved = board.Move(direction);
+        BoardMoveResult result =
+            board.Move(direction);
 
-        //无效移动不生成新数字
-        if (!moved)
+        //无效移动
+        if (!result.Moved)
         {
             Debug.Log($"无效移动：{direction}");
             return;
         }
 
-        //有效移动后生成一个新数字
+        //累加分数
+        score += result.Score;
+
+        //生成新数字
         board.GenerateRandomTile();
 
-        //输出当前棋盘
         PrintBoard();
     }
 
     /// <summary>
-    /// 输出当前棋盘
+    /// 打印当前棋盘
     /// </summary>
     private void PrintBoard()
     {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder builder =
+            new StringBuilder();
 
         builder.AppendLine("========== 2048 ==========");
 
-        for (int row = 0; row < BoardModel.Size; row++)
+        builder.AppendLine($"Score：{score}");
+
+        for (int row = 0;
+             row < BoardModel.Size;
+             row++)
         {
             for (int column = 0;
                  column < BoardModel.Size;

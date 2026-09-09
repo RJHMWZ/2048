@@ -71,9 +71,7 @@ public class BoardModel
     /// <summary>
     /// 根据指定方向移动棋盘
     /// </summary>
-    /// <param name="direction">移动方向</param>
-    /// <returns>棋盘是否发生变化</returns>
-    public bool Move(MoveDirection direction)
+    public BoardMoveResult Move(MoveDirection direction)
     {
         switch (direction)
         {
@@ -90,44 +88,58 @@ public class BoardModel
                 return MoveDown();
         }
 
-        return false;
+        return new BoardMoveResult(false, 0);
     }
 
     /// <summary>
     /// 向左移动
     /// </summary>
-    private bool MoveLeft()
+    private BoardMoveResult MoveLeft()
     {
         bool moved = false;
+        int score = 0;
+
         for (int row = 0; row < Size; row++)
         {
             int[] line = new int[Size];
+
             //读取当前行
             for (int column = 0; column < Size; column++)
             {
                 line[column] = cells[row, column];
             }
-            //向左合并
-            int[] result = LineMergeUtility.MergeLeft(line);
-            //比较并写回棋盘
+
+            //计算当前行的合并结果
+            LineMergeResult mergeResult =
+                LineMergeUtility.MergeLeft(line);
+
+            int[] result = mergeResult.Line;
+
+            //累加这一行获得的分数
+            score += mergeResult.Score;
+
+            //比较并写回
             for (int column = 0; column < Size; column++)
             {
                 if (cells[row, column] != result[column])
                 {
                     moved = true;
                 }
+
                 cells[row, column] = result[column];
             }
         }
-        return moved;
+
+        return new BoardMoveResult(moved, score);
     }
 
     /// <summary>
     /// 向右移动
     /// </summary>
-    private bool MoveRight()
+    private BoardMoveResult MoveRight()
     {
         bool moved = false;
+        int score = 0;
 
         for (int row = 0; row < Size; row++)
         {
@@ -136,16 +148,22 @@ public class BoardModel
             //反向读取当前行
             for (int column = 0; column < Size; column++)
             {
-                line[column] = cells[row, Size - 1 - column];
+                line[column] =
+                    cells[row, Size - 1 - column];
             }
 
-            //统一按照向左规则合并
-            int[] result = LineMergeUtility.MergeLeft(line);
+            LineMergeResult mergeResult =
+                LineMergeUtility.MergeLeft(line);
 
-            //反向写回棋盘
+            int[] result = mergeResult.Line;
+
+            score += mergeResult.Score;
+
+            //反向写回
             for (int column = 0; column < Size; column++)
             {
-                int targetColumn = Size - 1 - column;
+                int targetColumn =
+                    Size - 1 - column;
 
                 if (cells[row, targetColumn] != result[column])
                 {
@@ -156,27 +174,33 @@ public class BoardModel
             }
         }
 
-        return moved;
+        return new BoardMoveResult(moved, score);
     }
 
     /// <summary>
     /// 向上移动
     /// </summary>
-    private bool MoveUp()
+    private BoardMoveResult MoveUp()
     {
         bool moved = false;
+        int score = 0;
 
         for (int column = 0; column < Size; column++)
         {
             int[] line = new int[Size];
 
-            //从上往下读取一列
+            //从上往下读取
             for (int row = 0; row < Size; row++)
             {
                 line[row] = cells[row, column];
             }
 
-            int[] result = LineMergeUtility.MergeLeft(line);
+            LineMergeResult mergeResult =
+                LineMergeUtility.MergeLeft(line);
+
+            int[] result = mergeResult.Line;
+
+            score += mergeResult.Score;
 
             //从上往下写回
             for (int row = 0; row < Size; row++)
@@ -190,32 +214,40 @@ public class BoardModel
             }
         }
 
-        return moved;
+        return new BoardMoveResult(moved, score);
     }
 
     /// <summary>
     /// 向下移动
     /// </summary>
-    private bool MoveDown()
+    private BoardMoveResult MoveDown()
     {
         bool moved = false;
+        int score = 0;
 
         for (int column = 0; column < Size; column++)
         {
             int[] line = new int[Size];
 
-            //从下往上读取一列
+            //从下往上读取
             for (int row = 0; row < Size; row++)
             {
-                line[row] = cells[Size - 1 - row, column];
+                line[row] =
+                    cells[Size - 1 - row, column];
             }
 
-            int[] result = LineMergeUtility.MergeLeft(line);
+            LineMergeResult mergeResult =
+                LineMergeUtility.MergeLeft(line);
+
+            int[] result = mergeResult.Line;
+
+            score += mergeResult.Score;
 
             //从下往上写回
             for (int row = 0; row < Size; row++)
             {
-                int targetRow = Size - 1 - row;
+                int targetRow =
+                    Size - 1 - row;
 
                 if (cells[targetRow, column] != result[row])
                 {
@@ -226,7 +258,7 @@ public class BoardModel
             }
         }
 
-        return moved;
+        return new BoardMoveResult(moved, score);
     }
 
     /// <summary>
