@@ -60,6 +60,9 @@ public class Game2048Manager : MonoBehaviour
     /// </summary>
     public bool HasWon => hasWon;
 
+    [SerializeField]
+    private GameResultUI gameResultUI;
+
     private void Start()
     {
         StartGame();
@@ -70,30 +73,24 @@ public class Game2048Manager : MonoBehaviour
     /// </summary>
     public void StartGame()
     {
-        //创建新的棋盘数据
         board = new BoardModel();
 
-        //清空棋盘
         board.Clear();
 
-        //重置分数
         score = 0;
 
-        //重置游戏状态
         isGameOver = false;
         hasWon = false;
 
-        //开局生成两个随机数字
         board.GenerateRandomTile();
         board.GenerateRandomTile();
 
-        //刷新棋盘UI
+        gameResultUI?.ResetUI();
+
         boardView?.Refresh();
 
-        //刷新分数UI
         gameHUD?.SetScore(score);
 
-        //输出测试数据
         PrintBoard();
     }
 
@@ -166,17 +163,17 @@ public class Game2048Manager : MonoBehaviour
 
             Debug.Log("Victory！已经合成2048！");
 
-            //后面胜利面板会加在这里
+            gameResultUI?.ShowVictory();
         }
 
-        //判断Game Over
+        //Game Over
         if (board.IsGameOver())
         {
             isGameOver = true;
 
             Debug.Log("Game Over！");
 
-            //后面Game Over面板会加在这里
+            gameResultUI?.ShowGameOver(score);
         }
     }
 
@@ -214,5 +211,29 @@ public class Game2048Manager : MonoBehaviour
         builder.AppendLine("==========================");
 
         Debug.Log(builder.ToString());
+    }
+
+    /// <summary>
+    /// 达到2048后继续游戏
+    /// </summary>
+    public void ContinueGame()
+    {
+        gameResultUI?.HideVictory();
+    }
+
+    /// <summary>
+    /// 关闭胜利弹窗
+    /// </summary>
+    public void CloseVictoryPanel()
+    {
+        gameResultUI?.HideVictory();
+    }
+
+    /// <summary>
+    /// 返回主菜单
+    /// </summary>
+    public void BackToMenu()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MenuScene");
     }
 }

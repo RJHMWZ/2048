@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : SingtonMgr<GameManager>
 {
@@ -11,7 +10,15 @@ public class GameManager : SingtonMgr<GameManager>
     /// </summary>
     public void PlayGame()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("GameScene");
+    }
+
+    /// <summary>
+    /// 返回主菜单
+    /// </summary>
+    public void BackToMenu()
+    {
+        SceneManager.LoadScene("MenuScene");
     }
 
     /// <summary>
