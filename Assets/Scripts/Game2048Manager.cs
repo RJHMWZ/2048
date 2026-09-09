@@ -17,14 +17,22 @@ public class Game2048Manager : MonoBehaviour
     private int score;
 
     /// <summary>
-    /// 当前棋盘
+    /// 是否游戏结束
     /// </summary>
-    public BoardModel Board => board;
+    private bool isGameOver;
 
     /// <summary>
-    /// 当前分数
+    /// 是否已经达到2048
     /// </summary>
+    private bool hasWon;
+
+    public BoardModel Board => board;
+
     public int Score => score;
+
+    public bool IsGameOver => isGameOver;
+
+    public bool HasWon => hasWon;
 
     private void Start()
     {
@@ -40,10 +48,11 @@ public class Game2048Manager : MonoBehaviour
 
         board.Clear();
 
-        //重置分数
         score = 0;
 
-        //开局生成两个数字
+        isGameOver = false;
+        hasWon = false;
+
         board.GenerateRandomTile();
         board.GenerateRandomTile();
 
@@ -51,11 +60,15 @@ public class Game2048Manager : MonoBehaviour
     }
 
     /// <summary>
-    /// 根据玩家输入移动
+    /// 执行移动
     /// </summary>
     public void Move(MoveDirection direction)
     {
         if (board == null)
+            return;
+
+        //游戏结束后禁止继续移动
+        if (isGameOver)
             return;
 
         BoardMoveResult result =
@@ -65,28 +78,53 @@ public class Game2048Manager : MonoBehaviour
         if (!result.Moved)
         {
             Debug.Log($"无效移动：{direction}");
+
+            CheckGameState();
+
             return;
         }
 
-        //累加分数
+        //增加分数
         score += result.Score;
 
-        //生成新数字
+        //有效移动后生成新数字
         board.GenerateRandomTile();
+
+        //检查胜负状态
+        CheckGameState();
 
         PrintBoard();
     }
 
     /// <summary>
-    /// 打印当前棋盘
+    /// 检查当前游戏状态
+    /// </summary>
+    private void CheckGameState()
+    {
+        //第一次达到2048
+        if (!hasWon && board.HasValue(2048))
+        {
+            hasWon = true;
+
+            Debug.Log("Victory！已经合成2048！");
+        }
+
+        //判断Game Over
+        if (board.IsGameOver())
+        {
+            isGameOver = true;
+
+            Debug.Log("Game Over！");
+        }
+    }
+
+    /// <summary>
+    /// 输出棋盘
     /// </summary>
     private void PrintBoard()
     {
-        StringBuilder builder =
-            new StringBuilder();
-
+        StringBuilder builder =new StringBuilder();
         builder.AppendLine("========== 2048 ==========");
-
         builder.AppendLine($"Score：{score}");
 
         for (int row = 0;

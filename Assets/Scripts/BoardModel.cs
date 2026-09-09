@@ -283,4 +283,80 @@ public class BoardModel
 
         return emptyCells;
     }
+
+    /// <summary>
+    /// 检查棋盘中是否存在指定数字
+    /// </summary>
+    /// <param name="targetValue">目标数字</param>
+    /// <returns>是否存在</returns>
+    public bool HasValue(int targetValue)
+    {
+        for (int row = 0; row < Size; row++)
+        {
+            for (int column = 0; column < Size; column++)
+            {
+                if (cells[row, column] == targetValue)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// 判断当前棋盘是否还能继续移动
+    /// </summary>
+    /// <returns>是否存在可移动空间</returns>
+    public bool CanMove()
+    {
+        //第一步：只要存在空格，就一定还能继续游戏
+        for (int row = 0; row < Size; row++)
+        {
+            for (int column = 0; column < Size; column++)
+            {
+                if (cells[row, column] == 0)
+                {
+                    return true;
+                }
+            }
+        }
+
+        //第二步：检查左右相邻数字是否可以合并
+        for (int row = 0; row < Size; row++)
+        {
+            for (int column = 0; column < Size - 1; column++)
+            {
+                if (cells[row, column] ==cells[row, column + 1])
+                {
+                    return true;
+                }
+            }
+        }
+
+        //第三步：检查上下相邻数字是否可以合并
+        for (int column = 0; column < Size; column++)
+        {
+            for (int row = 0; row < Size - 1; row++)
+            {
+                if (cells[row, column] ==
+                    cells[row + 1, column])
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// 判断游戏是否结束
+    /// </summary>
+    /// <returns>是否Game Over</returns>
+    public bool IsGameOver()
+    {
+        return !CanMove();
+    }
 }
