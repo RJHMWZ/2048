@@ -4,6 +4,16 @@
 
 玩家可以使用方向键或 WASD 控制棋盘移动，相同数字会在移动方向上合并并累积分数。当棋盘中首次出现 2048 时触发胜利提示；当棋盘填满且无法继续合并时游戏结束。
 
+## 项目展示
+### 主菜单
+<img width="296" height="530" alt="封面" src="https://github.com/user-attachments/assets/49029b6d-6a01-417e-a051-9ba39d55e295" />
+
+### 游戏场景
+<img width="297" height="534" alt="游戏场景" src="https://github.com/user-attachments/assets/5223f3d0-d948-420f-86dc-c362dbb2fa4d" />
+
+
+### 试玩视频
+[点击观看试玩视频](https://github.com/user-attachments/assets/db1f455c-2152-40e4-b5b8-c8b13c0462c2)
 ## 项目特点
 
 - 经典 2048 玩法：支持上、下、左、右四方向移动与数字合并
@@ -225,6 +235,7 @@ GameResultUI 根据状态显示胜利或失败界面
 - 游戏逻辑和显示逻辑分层
 
 ## 后续优化方向
+
 - 增加移动端滑动操作
 - 增加撤销上一步功能
 - 增加更多主题皮肤
@@ -233,3 +244,6 @@ GameResultUI 根据状态显示胜利或失败界面
 - 增加 WebGL 在线试玩页面
 - 优化不同分辨率下的 UI 适配
 
+## 许可证
+
+当前仓库暂未声明开源许可证。如果希望其他人明确了解项目是否允许使用、修改或分发，建议后续补充 `LICENSE` 文件。
